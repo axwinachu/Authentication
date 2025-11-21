@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -38,11 +40,11 @@ public class SecurityConfiguration {
     @Bean
     UserDetailsManager userDetailsManager(){
         UserDetails user1= User.withUsername("aswin")
-                .password("{noop}2465")
+                .password(passwordEncoder().encode("2465"))
                 .roles("ADMIN")
                 .build();
         UserDetails user2= User.withUsername("abhi")
-                .password("{noop}2465")
+                .password(passwordEncoder().encode("2465"))
                 .roles("USER")
                 .build();
         JdbcUserDetailsManager userDetailsManager=new JdbcUserDetailsManager(dataSource);
@@ -50,5 +52,10 @@ public class SecurityConfiguration {
         userDetailsManager.createUser(user2);
         return userDetailsManager;
         //return new InMemoryUserDetailsManager(user1,user2);
+    }
+    //encodeing the password
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
     }
 }
